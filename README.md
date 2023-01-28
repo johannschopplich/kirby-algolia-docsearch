@@ -120,9 +120,9 @@ If languages are enabled in your Kirby project, the plugin will create an Algoli
 return [
     'johannschopplich.algolia-docsearch' => [
         // Algolia App ID for the project
-        'appId' => env('ALGOLIA_APP_ID'),
+        'appId' => 'ALGOLIA_APP_ID',
         // Algolia API Key for the project
-        'apiKey' => env('ALGOLIA_API_KEY'),
+        'apiKey' => 'ALGOLIA_API_KEY',
         // Algolia index base name; in mutlilang projects,
         // the language code will be appended by the pljgin
         'index' => 'example',
@@ -140,19 +140,24 @@ return [
         // Optional pages which should be excluded from the index
         'exclude' => [
             'pages' => [
-                'blog/fiverr-layout-css-fix'
+                'blog/some-post',
             ]
         ],
         // Define the search hit label
         'label' => [
             // Accepts a string or an array of strings for each language
+            // Single language:
+            // 'default' => 'Page'
+            // Multiple languages:
             'default' => [
                 'de' => 'Seite',
                 'en' => 'Page'
             ],
             'templates' => [
                 // Accepts a string or an array of strings for each language
+                // Single language:
                 // 'article' => 'Article'
+                // Multiple languages:
                 'article' => [
                     'de' => 'Artikel',
                     'en' => 'Article'
