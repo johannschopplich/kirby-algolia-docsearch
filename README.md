@@ -45,7 +45,7 @@ The DocSearch library to display the search input field and result modal is not 
 
 <details>
 
-<summary>tl;dr <strong>👉 Installation</strong></summary>
+<summary>👉 <strong>tl;dr</strong> Installation</summary>
 
 1. Import the required JS and CSS files in your project. Either by using a CDN or by installing the library via NPM.
 
