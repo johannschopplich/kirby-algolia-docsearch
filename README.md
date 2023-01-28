@@ -4,6 +4,10 @@ Quickest way to integrate a search bar in your Kirby project. Index your content
 
 You can use the **Algolia free plan**. This plugin solely uses basic Algolia features. Since the plugin indexes and parses the site, the Algolia crawler (a paid feature) is not needed. Leaving you with the option to stick with the free tier. 💸
 
+> “But DocSearch is for documentations! My Kirby project is not a documentation!” you might add.
+
+Well, we co-opt the DocSearch library for our own purposes. 😏 The library can be used anywhere, if the data model matches the requirements. And it does. 🎉
+
 ## Key Features
 
 - 🫡 No Algolia configuration required, just an account
@@ -141,11 +145,14 @@ return [
         ],
         // Define the search hit label
         'label' => [
+            // Accepts a string or an array of strings for each language
             'default' => [
                 'de' => 'Seite',
                 'en' => 'Page'
             ],
             'templates' => [
+                // Accepts a string or an array of strings for each language
+                // 'article' => 'Article'
                 'article' => [
                     'de' => 'Artikel',
                     'en' => 'Article'
