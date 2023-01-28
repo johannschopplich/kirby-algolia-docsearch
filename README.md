@@ -2,11 +2,11 @@
 
 Quickest way to integrate a search bar in your Kirby project. Index your content with a Kirby CLI command or Panel button push it to Algolia. The [Algolia's DocSearch](https://docsearch.algolia.com) JavaScript library will display a search button and result modal for you.
 
-You can use the **Algolia free plan**. This plugin solely uses basic Algolia features. Since the plugin indexes and parses the site, the Algolia crawler (a paid feature) is not needed. Leaving you with the option to stick with the free tier. 💸
+You can use the **Algolia free plan**, since the plugin itself indexes and parses the site. The Algolia crawler (a paid feature) is not needed. Leaving you with the option to stick with the free tier. 💸
 
 > “But DocSearch is for documentations! My Kirby project is not a documentation!” you might add.
 
-Well, we co-opt the DocSearch library for our own purposes. 😏 The library can be used anywhere, if the data model matches the requirements. And it does. 🎉
+Well, we co-opt the DocSearch library for our own purposes. 😏 The library can be used anywhere, if the data model matches the requirements. Which it does. 🎉
 
 ## Key Features
 
