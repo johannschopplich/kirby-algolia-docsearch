@@ -1,0 +1,43 @@
+{
+  "name": "johannschopplich/kirby-algolia-docsearch",
+  "description": "Algolia DocSearch plugin for Kirby CMS",
+  "type": "kirby-plugin",
+  "version": "1.0.0",
+  "keywords": [
+    "kirby",
+    "algola",
+    "docsearch",
+    "search",
+    "index"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/johannschopplich/kirby-algolia-docsearch#readme",
+  "authors": [
+    {
+      "name": "Johann Schopplich",
+      "email": "pkg@johannschopplich.com",
+      "homepage": "https://johannschopplich.com"
+    }
+  ],
+  "require": {
+    "getkirby/composer-installer": "^1.2",
+    "algolia/algoliasearch-client-php": "^3.3"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "@stable",
+    "getkirby/cms": "^3.9"
+  },
+  "scripts": {
+    "fix": "php-cs-fixer fix",
+    "dist": "composer install --no-dev --optimize-autoloader"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
+  },
+  "extra": {
+    "kirby-cms-path": false
+  }
+}
