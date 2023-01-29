@@ -7,42 +7,8 @@ load([
 ], __DIR__);
 
 \Kirby\Cms\App::plugin('johannschopplich/algolia-docsearch', [
-    'commands' => [
-        'algolia-docsearch:index' => [
-            'description' => 'Algolia DocSearch Index',
-            'args' => [],
-            'command' => function (\Kirby\CLI\CLI $cli) {
-                algolia()->index();
-
-                // Output for the command line
-                if (defined('STDOUT')) {
-                    $cli->success(t('johannschopplich.algolia-docsearch.index.success'));
-                }
-
-                // Output for Janitor
-                if (function_exists('janitor')) {
-                    janitor()->data($cli->arg('command'), [
-                        'status' => 200,
-                        'message' => t('johannschopplich.algolia-docsearch.index.success')
-                    ]);
-                }
-            }
-        ]
-    ],
-    'translations' => [
-        'de' => [
-            'johannschopplich.algolia-docsearch.index.start' => 'Site indexieren',
-            'johannschopplich.algolia-docsearch.index.success' => 'Site erfolgreich indexiert'
-        ],
-        'en' => [
-            'johannschopplich.algolia-docsearch.index.start' => 'Index site',
-            'johannschopplich.algolia-docsearch.index.success' => 'Site indexed successfully'
-        ],
-        'fr' => [
-            'johannschopplich.algolia-docsearch.index.start' => 'Indexer le site',
-            'johannschopplich.algolia-docsearch.index.success' => 'Site indexé avec succès'
-        ]
-    ]
+    'commands' => require __DIR__ . '/extensions/commands.php',
+    'translations' => require __DIR__ . '/extensions/translations.php',
 ]);
 
 function algolia(): \JohannSchopplich\Algolia\DocSearch
