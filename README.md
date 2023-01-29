@@ -88,31 +88,6 @@ The DocSearch library to display the search input field and result modal is not 
 
 ## Usage
 
-### Indexing the Site
-
-#### Kirby CLI
-
-Run the `algolia-docsearch:index` command to index your content.
-
-```bash
-kirby algolia-docsearch:index
-```
-
-#### Panel Button
-
-Given you have [Janitor](https://github.com/bnomei/kirby3-janitor) plugin installed, you can add a button to the Panel to index your content.
-
-```yml
-algoliaIndex:
-  label: johannschopplich.algolia-docsearch.index.start
-  type: janitor
-  command: "algolia-docsearch:index"
-```
-
-### Multilang Projects
-
-If languages are enabled in your Kirby project, the plugin will create an Algolia index for each language. The index name will be the value of the `index` option appended by the language code, e.g. `example-de`.
-
 ### Configuration
 
 ```php
@@ -171,6 +146,31 @@ return [
     ]
 ];
 ```
+
+### Indexing the Site
+
+#### Kirby CLI
+
+Run the `algolia-docsearch:index` command to index your content.
+
+```bash
+kirby algolia-docsearch:index
+```
+
+#### Panel Button
+
+Given you have [Janitor](https://github.com/bnomei/kirby3-janitor) plugin installed, you can add a button to the Panel to index your content.
+
+```yml
+algoliaIndex:
+  label: johannschopplich.algolia-docsearch.index.start
+  type: janitor
+  command: "algolia-docsearch:index"
+```
+
+### Multilang Projects
+
+If languages are enabled in your Kirby project, the plugin will create an Algolia index for each language. The index name will be the value of the `index` option appended by the language code, e.g. `example-de`.
 
 ## Cookbook
 
