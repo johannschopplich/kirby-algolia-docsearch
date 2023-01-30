@@ -176,12 +176,8 @@ class DocSearch
         $pageTemplate = $page->intendedTemplate()->name();
 
         // Build resulting data array
-        return [
+        $data = [
             'objectID' => $page->uri(),
-            'title' => $page->content($languageCode)->get('title')->value(),
-            'content' => is_callable($this->options['content'])
-                ? $this->options['content']($page)
-                : $this->parseContent($page),
             'url' => $page->url(),
             'type' => 'lvl1',
             'hierarchy' => [
@@ -192,15 +188,31 @@ class DocSearch
                 'lvl1' => $page->content($languageCode)->get('title')->value()
             ]
         ];
+
+        // Add title
+        $data['title'] = $page->content($languageCode)->get('title')->value();
+
+        // Add content
+        if (is_array($this->options['content'])) {
+            $result = $this->options['content'][$pageTemplate] ?? null;
+            $data['content'] = is_callable($result)
+                ? $result($page)
+                : $this->pageToText($page, $result ?? 'body');
+        } elseif (is_callable($this->options['content'])) {
+            $data['content'] = $this->options['content']($page);
+        } else {
+            $data['content'] = $this->pageToText($page, $this->options['content'] ?? 'body');
+        }
+
+        return $data;
     }
 
     /**
      * Extracts the text content from a rendered page
      */
-    protected function parseContent(Page $page): string
+    protected function pageToText(Page $page, string $tag = 'body'): string
     {
         $html = $page->render();
-        $tag = $this->options['content'] ?? 'body';
 
         // Extract the HTML from inside the given tag
         $dom = new Dom($html);
