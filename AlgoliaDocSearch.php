@@ -195,7 +195,7 @@ class DocSearch
         // Add content
         $content = $this->options['content'] ?? null;
         $result = is_array($content) ? ($content[$pageTemplate] ?? null) : $content;
-        $data['content'] = is_callable($result) ? $result($page) : $this->pageToText($page, $result);
+        $data['content'] = is_callable($result) ? $result($page) : $this->pageToText($page, $result ?? 'body');
 
         return $data;
     }
