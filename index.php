@@ -11,7 +11,12 @@ load([
     'translations' => require __DIR__ . '/extensions/translations.php',
 ]);
 
-function algolia(): \JohannSchopplich\Algolia\DocSearch
-{
-    return \JohannSchopplich\Algolia\DocSearch::instance();
+if (!function_exists('algolia')) {
+    /**
+     * Returns the Algolia DocSearch instance
+     */
+    function algolia(): \JohannSchopplich\Algolia\DocSearch
+    {
+        return \JohannSchopplich\Algolia\DocSearch::instance();
+    }
 }

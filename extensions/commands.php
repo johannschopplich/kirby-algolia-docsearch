@@ -5,7 +5,10 @@ return [
         'description' => 'Algolia DocSearch Index',
         'args' => [],
         'command' => function (\Kirby\CLI\CLI $cli) {
-            algolia()->index();
+            $algolia = \JohannSchopplich\Algolia\DocSearch::instance();
+
+            // Index all pages
+            $algolia->index();
 
             // Output for the command line
             if (php_sapi_name() === 'cli') {
