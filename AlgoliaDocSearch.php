@@ -177,9 +177,6 @@ class DocSearch
 
         // Build resulting data array
         $data = [
-            'objectID' => $page->uri(),
-            'url' => $page->url(),
-            'type' => 'lvl1',
             'hierarchy' => [
                 'lvl0' => $label['templates'][$pageTemplate][$languageCode]
                     ?? $label['templates'][$pageTemplate]
@@ -193,16 +190,9 @@ class DocSearch
         $data['title'] = $page->content($languageCode)->get('title')->value();
 
         // Add content
-        if (is_array($this->options['content'])) {
-            $result = $this->options['content'][$pageTemplate] ?? null;
-            $data['content'] = is_callable($result)
-                ? $result($page)
-                : $this->pageToText($page, $result ?? 'body');
-        } elseif (is_callable($this->options['content'])) {
-            $data['content'] = $this->options['content']($page);
-        } else {
-            $data['content'] = $this->pageToText($page, $this->options['content'] ?? 'body');
-        }
+        $content = $this->options['content'] ?? null;
+        $result = is_array($content) ? ($content[$pageTemplate] ?? null) : $content;
+        $data['content'] = is_callable($result) ? $result($page) : $this->pageToText($page, $result);
 
         return $data;
     }
