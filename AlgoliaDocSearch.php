@@ -177,6 +177,9 @@ class DocSearch
 
         // Build resulting data array
         $data = [
+            'objectID' => $page->uri(),
+            'url' => $page->url(),
+            'type' => 'lvl1',
             'hierarchy' => [
                 'lvl0' => $label['templates'][$pageTemplate][$languageCode]
                     ?? $label['templates'][$pageTemplate]
