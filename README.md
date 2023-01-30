@@ -159,6 +159,8 @@ kirby algolia-docsearch:index
 
 #### Panel Button
 
+![Preview of the Panel button](./.github/panel-button-preview.gif)
+
 Given you have [Janitor](https://github.com/bnomei/kirby3-janitor) plugin installed, you can add a button to the Panel to index your content.
 
 ```yml
