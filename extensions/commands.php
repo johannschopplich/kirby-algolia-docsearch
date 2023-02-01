@@ -12,7 +12,7 @@ return [
 
             // Output for the command line
             if (php_sapi_name() === 'cli') {
-                $cli->success(t('johannschopplich.algolia-docsearch.index.success'));
+                $cli->success(\Kirby\Toolkit\I18n::translate('johannschopplich.algolia-docsearch.index.success'));
             }
 
             // Output for Janitor
