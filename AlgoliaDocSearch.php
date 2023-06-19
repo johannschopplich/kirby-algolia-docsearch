@@ -164,6 +164,10 @@ class DocSearch
             return false;
         }
 
+        if ($page->isUnlisted()) {
+            return false;
+        }
+
         return in_array($pageTemplate, $templates, true);
     }
 
