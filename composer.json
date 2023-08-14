@@ -2,7 +2,7 @@
   "name": "johannschopplich/kirby-algolia-docsearch",
   "description": "Algolia DocSearch plugin for Kirby CMS",
   "type": "kirby-plugin",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "keywords": [
     "kirby",
     "algola",
@@ -21,7 +21,7 @@
   ],
   "require": {
     "getkirby/composer-installer": "^1.2",
-    "algolia/algoliasearch-client-php": "^3.3"
+    "algolia/algoliasearch-client-php": "^3.4"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "@stable",

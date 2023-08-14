@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'johannschopplich/kirby-algolia-docsearch',
-        'pretty_version' => '0.4.0',
-        'version' => '0.4.0.0',
+        'pretty_version' => '0.4.1',
+        'version' => '0.4.1.0',
         'reference' => NULL,
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'algolia/algoliasearch-client-php' => array(
-            'pretty_version' => '3.3.2',
-            'version' => '3.3.2.0',
-            'reference' => 'cbd07bc0bb7303ff71e238d2d6284ef8469e1d5a',
+            'pretty_version' => '3.4.0',
+            'version' => '3.4.0.0',
+            'reference' => 'df4508d6ca85700d2df9b556edd18696f37fb2cd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../algolia/algoliasearch-client-php',
             'aliases' => array(),
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'johannschopplich/kirby-algolia-docsearch' => array(
-            'pretty_version' => '0.4.0',
-            'version' => '0.4.0.0',
+            'pretty_version' => '0.4.1',
+            'version' => '0.4.1.0',
             'reference' => NULL,
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'psr/http-message' => array(
-            'pretty_version' => '1.1',
-            'version' => '1.1.0.0',
-            'reference' => 'cb6ce4845ce34a8ad9e68117c10ee90a29919eba',
+            'pretty_version' => '2.0',
+            'version' => '2.0.0.0',
+            'reference' => '402d35bcb92c70c026d1a6a9883f06b2ead23d71',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/http-message',
             'aliases' => array(),
