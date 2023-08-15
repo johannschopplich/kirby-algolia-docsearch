@@ -3,6 +3,7 @@
 namespace JohannSchopplich\Algolia;
 
 use Algolia\AlgoliaSearch\SearchClient as Algolia;
+use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Parsley\Element;
 use Kirby\Parsley\Parsley;
@@ -87,7 +88,7 @@ class DocSearch
      */
     public function __construct()
     {
-        $this->options = option('johannschopplich.algolia-docsearch', []);
+        $this->options = App::instance()->option('johannschopplich.algolia-docsearch', []);
 
         if (!isset($this->options['appId'], $this->options['apiKey'])) {
             throw new \Exception('Please set your Algolia API credentials in the Kirby configuration.');
@@ -113,9 +114,11 @@ class DocSearch
      */
     public function index(): void
     {
-        if (kirby()->multilang()) {
-            foreach (kirby()->languages()->codes() as $languageCode) {
-                kirby()->setCurrentLanguage($languageCode);
+        $kirby = App::instance();
+
+        if ($kirby->multilang()) {
+            foreach ($kirby->languages()->codes() as $languageCode) {
+                $kirby->setCurrentLanguage($languageCode);
                 $this->buildIndex($languageCode);
             }
         } else {
@@ -134,8 +137,10 @@ class DocSearch
      */
     public function buildIndex(string|null $languageCode = null): void
     {
+        $kirby = App::instance();
+
         // Get all pages that should be indexed
-        $pages = site()->index()->filter([$this, 'isIndexable']);
+        $pages = $kirby->site()->index()->filter([$this, 'isIndexable']);
 
         // Convert pages to Algolia data arrays
         $objects = $pages->map(fn (Page $page) => $this->format($page, $languageCode));
@@ -199,7 +204,7 @@ class DocSearch
         // Add content
         $content = $this->options['content'] ?? null;
         $result = is_array($content) ? ($content[$pageTemplate] ?? null) : $content;
-        $data['content'] = is_callable($result) ? $result($page) : $this->pageToText($page, $result ?? 'body');
+        $data['content'] = is_callable($result) ? $result($page) : $this->pageToText($page, $result || 'body');
 
         return $data;
     }

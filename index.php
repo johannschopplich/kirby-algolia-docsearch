@@ -2,7 +2,7 @@
 
 @include_once __DIR__ . '/vendor/autoload.php';
 
-load([
+\Kirby\Filesystem\F::loadClasses([
     'JohannSchopplich\\Algolia\\DocSearch' => 'AlgoliaDocSearch.php'
 ], __DIR__);
 
