@@ -99,11 +99,11 @@ return [
         // Algolia API Key for the project
         'apiKey' => 'ALGOLIA_API_KEY',
         // Algolia index base name; in mutlilang projects,
-        // the language code will be appended by the pljgin
+        // the language code will be appended by the plugin
         'index' => 'example',
         // HTML tag name which contains a page's content or
         // closure which returns the content of a page
-        // By default, `body` will be used, here the `main` tag
+        // If not given defaults to `body`
         'content' => 'main',
         // Templates which should be indexed
         'templates' => [
@@ -144,6 +144,22 @@ return [
             ]
         ]
     ]
+];
+```
+
+#### Callback for Content
+
+Instead of extracting content by an HTML tag name, you can define a closure which returns the content of a page:
+
+```php
+# /site/config/config.php
+return [
+    'johannschopplich.algolia-docsearch' => [
+        // Return any string which should be indexed
+        'content' => fn (\Kirby\Cms\Page $page) => strip_tags($page->text()->toBlocks()->toHtml())
+        // other options …
+    ]
+
 ];
 ```
 
@@ -209,7 +225,7 @@ docsearch({
 
 The DocSearch library provides a [customization API](https://docsearch.algolia.com/docs/styling#customization-api) to style the search modal. You can add the following CSS to your project to style the search modal.
 
-In practice, it's easiest to overwrite some CSS Custom Properties. You may take a look at [how styled the component](https://github.com/johannschopplich/johannschopplich.com/blob/main/src/styles/components/algolia.scss).
+In practice, it's easiest to overwrite some CSS Custom Properties. You may take a look at [how I styled the component](https://github.com/johannschopplich/johannschopplich.com/blob/main/src/styles/components/algolia.scss).
 
 ## Special Thanks
 
