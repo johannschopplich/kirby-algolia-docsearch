@@ -99,7 +99,8 @@ return [
         // Algolia API Key for the project
         'apiKey' => 'ALGOLIA_API_KEY',
         // Algolia index base name; in mutlilang projects,
-        // the language code will be appended by the plugin
+        // the language code will be appended by the plugin,
+        // e.g. `example-de` for German
         'index' => 'example',
         // HTML tag name which contains a page's content or
         // closure which returns the content of a page
