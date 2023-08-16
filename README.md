@@ -160,7 +160,22 @@ return [
         'content' => fn (\Kirby\Cms\Page $page) => strip_tags($page->text()->toBlocks()->toHtml())
         // other options …
     ]
+];
+```
 
+Defining callbacks for each template is also possible:
+
+```php
+# /site/config/config.php
+return [
+    'johannschopplich.algolia-docsearch' => [
+        // Return any string which should be indexed
+        'content' => [
+            'default' => fn (\Kirby\Cms\Page $page) => strip_tags($page->text()->toBlocks()->toHtml())
+            'home' => fn (\Kirby\Cms\Page $page) => $page->description()->value()
+        ]
+        // other options …
+    ]
 ];
 ```
 
