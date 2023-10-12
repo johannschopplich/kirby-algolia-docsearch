@@ -1,3 +1,5 @@
+![Kirby Algolia DocSearch](./.github/kirby-algolia-docsearch.png)
+
 # Kirby Algolia DocSearch
 
 Quickest way to integrate a search bar in your Kirby project. Index your content with a Kirby CLI command or Panel button push it to Algolia. The [Algolia's DocSearch](https://docsearch.algolia.com) JavaScript library will display a search button and result modal for you.
