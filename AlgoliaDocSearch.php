@@ -214,7 +214,7 @@ class DocSearch
     /**
      * Extracts the text content from a rendered page
      */
-    protected function pageToText(Page $page, string $tag = 'body', string|null $languageCode): string
+    protected function pageToText(Page $page, string $tag, string|null $languageCode): string
     {
         // TODO: Fix multilang issue
         // Render page for the given language
