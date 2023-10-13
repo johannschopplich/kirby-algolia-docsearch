@@ -206,9 +206,11 @@ class DocSearch
         if (is_string($content)) {
             $data['content'] = $this->pageToText($page, $content, $languageCode);
         } else {
-            $renderFn = $content[$pageTemplate] ?? $content['default'] ?? null;
+            $renderFn = is_array($content)
+                ? $content[$pageTemplate] ?? $content['default'] ?? null
+                : $content;
             if (!is_callable($renderFn)) {
-                throw new \Exception('The "content" option must be a string or a callable.');
+                throw new \Exception('The "content" option must be a string, callable or an array of callables.');
             }
             $data['content'] = $renderFn($page, $languageCode);
         }
