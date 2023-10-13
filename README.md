@@ -29,15 +29,15 @@ Well, we co-opt the DocSearch library for our own purposes. 😏 The library can
 
 ## Installation
 
-### Download
-
-Download and copy this repository to `/site/plugins/kirby-algolia-docsearch`.
-
 ### Composer
 
 ```bash
 composer require johannschopplich/kirby-algolia-docsearch
 ```
+
+### Download
+
+Download and copy this repository to `/site/plugins/kirby-algolia-docsearch`.
 
 ## Setup
 
