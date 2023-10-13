@@ -159,7 +159,7 @@ Instead of extracting content by an HTML tag name, you can define a closure whic
 return [
     'johannschopplich.algolia-docsearch' => [
         // Return any string which should be indexed
-        'content' => fn (\Kirby\Cms\Page $page) => strip_tags($page->text()->toBlocks()->toHtml())
+        'content' => fn (\Kirby\Cms\Page $page, string|null $languageCode) => strip_tags($page->text()->toBlocks()->toHtml())
         // other options …
     ]
 ];
@@ -173,8 +173,8 @@ return [
     'johannschopplich.algolia-docsearch' => [
         // Return any string which should be indexed
         'content' => [
-            'default' => fn (\Kirby\Cms\Page $page) => strip_tags($page->text()->toBlocks()->toHtml())
-            'home' => fn (\Kirby\Cms\Page $page) => $page->description()->value()
+            'default' => fn (\Kirby\Cms\Page $page, string|null $languageCode) => strip_tags($page->text()->toBlocks()->toHtml())
+            'home' => fn (\Kirby\Cms\Page $page, string|null $languageCode) => $page->description()->value()
         ]
         // other options …
     ]

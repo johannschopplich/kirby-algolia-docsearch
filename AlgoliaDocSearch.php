@@ -204,7 +204,9 @@ class DocSearch
         // Add content
         $content = $this->options['content'] ?? null;
         $result = is_array($content) ? ($content[$pageTemplate] ?? null) : $content;
-        $data['content'] = is_callable($result) ? $result($page) : $this->pageToText($page, $result || 'body');
+        $data['content'] = is_callable($result)
+          ? $result($page, $languageCode)
+          : $this->pageToText($page, $result || 'body', $languageCode);
 
         return $data;
     }
@@ -212,8 +214,10 @@ class DocSearch
     /**
      * Extracts the text content from a rendered page
      */
-    protected function pageToText(Page $page, string $tag = 'body'): string
+    protected function pageToText(Page $page, string $tag = 'body', string|null $languageCode): string
     {
+        // TODO: Fix multilang issue
+        // Render page for the given language
         $html = $page->render();
 
         // Extract the HTML from inside the given tag

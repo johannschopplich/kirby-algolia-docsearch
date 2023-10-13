@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
-            "version": "3.4.0",
-            "version_normalized": "3.4.0.0",
+            "version": "3.4.1",
+            "version_normalized": "3.4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/algolia/algoliasearch-client-php.git",
-                "reference": "df4508d6ca85700d2df9b556edd18696f37fb2cd"
+                "reference": "cf87b649f745479c0800299481d91dc303e23cea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/df4508d6ca85700d2df9b556edd18696f37fb2cd",
-                "reference": "df4508d6ca85700d2df9b556edd18696f37fb2cd",
+                "url": "https://api.github.com/repos/algolia/algoliasearch-client-php/zipball/cf87b649f745479c0800299481d91dc303e23cea",
+                "reference": "cf87b649f745479c0800299481d91dc303e23cea",
                 "shasum": ""
             },
             "require": {
@@ -20,7 +20,7 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "php": "^7.3 || ^8.0",
-                "psr/http-message": "^1.0 || ^2.0",
+                "psr/http-message": "^1.1 || ^2.0",
                 "psr/log": "^1.0 || ^2.0 || ^3.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0"
             },
@@ -33,7 +33,7 @@
             "suggest": {
                 "guzzlehttp/guzzle": "If you prefer to use Guzzle HTTP client instead of the Http Client implementation provided by the package"
             },
-            "time": "2023-08-10T09:34:00+00:00",
+            "time": "2023-08-28T14:34:04+00:00",
             "bin": [
                 "bin/algolia-doctor"
             ],
@@ -73,7 +73,7 @@
             ],
             "support": {
                 "issues": "https://github.com/algolia/algoliasearch-client-php/issues",
-                "source": "https://github.com/algolia/algoliasearch-client-php/tree/3.4.0"
+                "source": "https://github.com/algolia/algoliasearch-client-php/tree/3.4.1"
             },
             "install-path": "../algolia/algoliasearch-client-php"
         },
