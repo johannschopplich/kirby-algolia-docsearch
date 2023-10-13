@@ -165,6 +165,21 @@ return [
 ];
 ```
 
+In multi-language projects, you can also pass the language code to the closure and return the content for the given language:
+
+```php
+# /site/config/config.php
+return [
+    'johannschopplich.algolia-docsearch' => [
+        // Return any string which should be indexed
+        'content' => function (\Kirby\Cms\Page $page, string|null $languageCode) {
+            return strip_tags($page->content($languageCode)->text()->toBlocks()->toHtml());
+        }
+        // other options …
+    ]
+];
+```
+
 Defining callbacks for each template is also possible:
 
 ```php

@@ -202,11 +202,16 @@ class DocSearch
         $data['title'] = $page->content($languageCode)->get('title')->value();
 
         // Add content
-        $content = $this->options['content'] ?? null;
-        $result = is_array($content) ? ($content[$pageTemplate] ?? null) : $content;
-        $data['content'] = is_callable($result)
-          ? $result($page, $languageCode)
-          : $this->pageToText($page, $result || 'body', $languageCode);
+        $content = $this->options['content'] ?? 'body';
+        if (is_string($content)) {
+            $data['content'] = $this->pageToText($page, $content, $languageCode);
+        } else {
+            $renderFn = $content[$pageTemplate] ?? $content['default'] ?? null;
+            if (!is_callable($renderFn)) {
+                throw new \Exception('The "content" option must be a string or a callable.');
+            }
+            $data['content'] = $renderFn($page, $languageCode);
+        }
 
         return $data;
     }
