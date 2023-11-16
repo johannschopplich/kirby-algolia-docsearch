@@ -109,6 +109,15 @@ class DocSearch
     }
 
     /**
+     * Returns the Algolia index for the given language code
+     */
+    public function getAlgoliaIndex(string|null $languageCode = null): \Algolia\AlgoliaSearch\SearchIndex
+    {
+        $indexName = $this->options['index'] . (!empty($languageCode) ? "-{$languageCode}" : '');
+        return $this->algolia->initIndex($indexName);
+    }
+
+    /**
      * Indexes the whole site and replaces the current Algolia index
      * or multiple Algolia indices if Kirby languages are enabled
      */
@@ -124,6 +133,25 @@ class DocSearch
         } else {
             $this->buildIndex();
         }
+    }
+
+    /**
+     * Indexes a single page and saves it to the current Algolia index
+     */
+    public function indexPage(Page $page, string|null $languageCode = null): void
+    {
+        if (!$this->isIndexable($page)) {
+            return;
+        }
+
+        // Convert page to Algolia data array
+        $object = $this->format($page, $languageCode);
+
+        // Get Algolia index
+        $index = $this->getAlgoliaIndex($languageCode);
+
+        // Save object to index
+        $index->saveObject($object);
     }
 
     /**
@@ -146,8 +174,7 @@ class DocSearch
         $objects = $pages->map(fn (Page $page) => $this->format($page, $languageCode));
 
         // Get Algolia index
-        $indexName = $this->options['index'] . (!empty($languageCode) ? "-{$languageCode}" : '');
-        $index = $this->algolia->initIndex($indexName);
+        $index = $this->getAlgoliaIndex($languageCode);
 
         // Replace all objects in the index
         $index->replaceAllObjects($objects);
@@ -169,7 +196,7 @@ class DocSearch
             return false;
         }
 
-        if ($page->isUnlisted()) {
+        if (!$page->isListed()) {
             return false;
         }
 
@@ -186,8 +213,8 @@ class DocSearch
 
         // Build resulting data array
         $data = [
-            'objectID' => $page->uri(),
-            'url' => $page->url(),
+            'objectID' => $page->uri($languageCode),
+            'url' => $page->url($languageCode),
             'type' => 'lvl1',
             'hierarchy' => [
                 'lvl0' => $label['templates'][$pageTemplate][$languageCode]
@@ -209,9 +236,11 @@ class DocSearch
             $renderFn = is_array($content)
                 ? $content[$pageTemplate] ?? $content['default'] ?? null
                 : $content;
+
             if (!is_callable($renderFn)) {
                 throw new \Exception('The "content" option must be a string, callable or an array of callables.');
             }
+
             $data['content'] = $renderFn($page, $languageCode);
         }
 

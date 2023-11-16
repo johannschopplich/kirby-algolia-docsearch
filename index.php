@@ -8,7 +8,8 @@
 
 \Kirby\Cms\App::plugin('johannschopplich/algolia-docsearch', [
     'commands' => require __DIR__ . '/extensions/commands.php',
-    'translations' => require __DIR__ . '/extensions/translations.php',
+    'hooks' => require __DIR__ . '/extensions/hooks.php',
+    'translations' => require __DIR__ . '/extensions/translations.php'
 ]);
 
 if (!function_exists('algolia')) {

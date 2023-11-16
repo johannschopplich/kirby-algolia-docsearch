@@ -108,6 +108,9 @@ return [
         // closure which returns the content of a page
         // If not given defaults to `body`
         'content' => 'main',
+        // Register hooks to index a page on changed slug,
+        // title, content or status
+        'hooks' => false,
         // Templates which should be indexed
         'templates' => [
             'article',
@@ -219,6 +222,22 @@ algoliaIndex:
   command: "algolia-docsearch:index"
 ```
 
+#### Page Hooks
+
+This plugin registers page hooks to index a given page on changed slug, title, content or status. These hooks are not triggered by default, but have to be enabled in the plugin options.
+
+```php
+# /site/config/config.php
+return [
+    'johannschopplich.algolia-docsearch' => [
+        'hooks' => true
+        // other options …
+    ]
+];
+```
+
+With hooks enabled, you can index the whole page once and the plugin will keep the index up to date.
+
 ### Multilang Projects
 
 If languages are enabled in your Kirby project, the plugin will create an Algolia index for each language. The index name will be the value of the `index` option appended by the language code, e.g. `example-de`.
@@ -267,4 +286,4 @@ In practice, it's easiest to overwrite some CSS Custom Properties. You may take 
 
 ## License
 
-[MIT](./LICENSE) License © 2023 [Johann Schopplich](https://github.com/johannschopplich)
+[MIT](./LICENSE) License © 2023-PRESENT [Johann Schopplich](https://github.com/johannschopplich)
