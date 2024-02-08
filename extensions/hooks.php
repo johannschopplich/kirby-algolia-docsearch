@@ -1,6 +1,5 @@
 <?php
 
-use Exception;
 use JohannSchopplich\Algolia\DocSearch;
 use Kirby\Cms\Page;
 
@@ -63,8 +62,8 @@ return [
 
         try {
             $algolia->indexPage($newPage, $languageCode);
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
     }
 ];
