@@ -2,6 +2,8 @@
 
 use JohannSchopplich\Algolia\DocSearch;
 use Kirby\Cms\Page;
+use Kirby\Exception\Exception;
+use Throwable;
 
 return [
     'page.changeSlug:before' => function (Page $page, string $slug, string|null $languageCode = null) {
@@ -13,8 +15,8 @@ return [
             return;
         }
 
-        $algolia = DocSearch::instance();
-        $index = $algolia->getAlgoliaIndex();
+        $docSearch = DocSearch::instance();
+        $index = $docSearch->getAlgoliaIndex();
         $index->deleteObject($page->uri($languageCode));
     },
     'page.delete:after' => function (bool $status, Page $page) {
@@ -26,8 +28,8 @@ return [
             return;
         }
 
-        $algolia = DocSearch::instance();
-        $index = $algolia->getAlgoliaIndex();
+        $docSearch = DocSearch::instance();
+        $index = $docSearch->getAlgoliaIndex();
         $index->deleteObject($page->uri($this->languageCode()));
     },
     'page.*:after' => function (\Kirby\Cms\Event $event, Page|null $newPage) {
@@ -49,8 +51,8 @@ return [
         }
 
         $languageCode = $this->languageCode();
-        $algolia = DocSearch::instance();
-        $index = $algolia->getAlgoliaIndex();
+        $docSearch = DocSearch::instance();
+        $index = $docSearch->getAlgoliaIndex();
 
         if (
             $event->action() === 'delete' ||
@@ -61,9 +63,9 @@ return [
         }
 
         try {
-            $algolia->indexPage($newPage, $languageCode);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            $docSearch->indexPage($newPage, $languageCode);
+        } catch (Throwable $e) {
+            throw new Exception('Algolia: ' . $e->getMessage());
         }
     }
 ];
