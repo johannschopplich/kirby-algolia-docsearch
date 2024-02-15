@@ -5,6 +5,7 @@ namespace JohannSchopplich\Algolia;
 use Algolia\AlgoliaSearch\SearchClient as Algolia;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Exception\Exception;
 use Kirby\Parsley\Element;
 use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Plain as PlainSchema;
@@ -15,7 +16,7 @@ class DocSearch
     /**
      * Singleton class instance
      */
-    public static \JohannSchopplich\Algolia\DocSearch $instance;
+    public static DocSearch $instance;
 
     /**
      * Algolia client instance
@@ -81,7 +82,7 @@ class DocSearch
     /**
      * Config settings
      */
-    protected array $options = [];
+    public array $options = [];
 
     /**
      * Class constructor
@@ -91,7 +92,7 @@ class DocSearch
         $this->options = App::instance()->option('johannschopplich.algolia-docsearch', []);
 
         if (!isset($this->options['appId'], $this->options['apiKey'])) {
-            throw new \Exception('Please set your Algolia API credentials in the Kirby configuration.');
+            throw new Exception('Please set your Algolia API credentials in the Kirby configuration.');
         }
 
         $this->algolia = Algolia::create(
@@ -204,12 +205,30 @@ class DocSearch
     }
 
     /**
-     * Converts a page into a data array for Algolia
+     * Builds the Algolia data array from a Kirby page
      */
     public function format(Page $page, string|null $languageCode): array
     {
         $label = $this->options['label'] ?? [];
         $pageTemplate = $page->intendedTemplate()->name();
+
+        // Determine the correct label for lvl0
+        $lvl0Label = $label['default'];
+        if (isset($label['templates'][$pageTemplate])) {
+            if (is_array($label['templates'][$pageTemplate])) {
+                if (!isset($label['templates'][$pageTemplate][$languageCode])) {
+                    throw new Exception('Missing label for language code: ' . $languageCode);
+                }
+                $lvl0Label = $label['templates'][$pageTemplate][$languageCode];
+            } else {
+                $lvl0Label = $label['templates'][$pageTemplate];
+            }
+        } elseif (is_array($label['default'])) {
+            if (!isset($label['default'][$languageCode])) {
+                throw new Exception('Missing default label for language code: ' . $languageCode);
+            }
+            $lvl0Label = $label['default'][$languageCode];
+        }
 
         // Build resulting data array
         $data = [
@@ -217,10 +236,7 @@ class DocSearch
             'url' => $page->url($languageCode),
             'type' => 'lvl1',
             'hierarchy' => [
-                'lvl0' => $label['templates'][$pageTemplate][$languageCode]
-                    ?? $label['templates'][$pageTemplate]
-                    ?? $label['default'][$languageCode]
-                    ?? $label['default'],
+                'lvl0' => $lvl0Label,
                 'lvl1' => $page->content($languageCode)->get('title')->value()
             ]
         ];
@@ -238,7 +254,7 @@ class DocSearch
                 : $content;
 
             if (!is_callable($renderFn)) {
-                throw new \Exception('The "content" option must be a string, callable or an array of callables.');
+                throw new Exception('The "content" option must be a string, callable or an array of callables.');
             }
 
             $data['content'] = $renderFn($page, $languageCode);
