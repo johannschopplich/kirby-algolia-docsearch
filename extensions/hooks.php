@@ -42,7 +42,7 @@ return [
         }
 
         // Check if we want to handle the action
-        if (!in_array($event->action(), ['changeSlug', 'changeStatus', 'changeTitle', 'update'], true)) {
+        if (!in_array($event->action(), ['changeSlug', 'changeStatus', 'changeTemplate', 'changeTitle', 'update'], true)) {
             return;
         }
 
@@ -53,10 +53,12 @@ return [
         $languageCode = $this->languageCode();
         $docSearch = DocSearch::instance();
         $index = $docSearch->getAlgoliaIndex();
+        $allowedTemplates = $docSearch->options['templates'] ?? [];
 
         if (
             $event->action() === 'delete' ||
-            ($event->action() === 'changeStatus' && !$newPage->isListed())
+            ($event->action() === 'changeStatus' && !$newPage->isListed()) ||
+            ($event->action() === 'changeTemplate' && !in_array($newPage->intendedTemplate()->name(), $allowedTemplates, true))
         ) {
             $index->deleteObject($newPage->uri($languageCode));
             return;
