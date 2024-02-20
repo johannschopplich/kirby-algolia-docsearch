@@ -25,7 +25,7 @@ Well, we co-opt the DocSearch library for our own purposes. 😏 The library can
 
 - Kirby 3.9+
 
-> Kirby is not a free software. You can try it for free on your local machine but in order to run Kirby on a public server you must purchase a [valid license](https://getkirby.com/buy).
+Kirby is not free software. However, you can try Kirby and the Starterkit on your local machine or on a test server as long as you need to make sure it is the right tool for your next project. … and when you’re convinced, [buy your license](https://getkirby.com/buy).
 
 ## Installation
 
