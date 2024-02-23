@@ -7,8 +7,7 @@ use Kirby\Toolkit\I18n;
 return [
     'algolia-docsearch:index' => [
         'description' => 'Algolia DocSearch Index',
-        'args' => [],
-        'command' => function (CLI $cli) {
+        'command' => static function (CLI $cli): void {
             $docSearch = DocSearch::instance();
 
             // Index all pages
