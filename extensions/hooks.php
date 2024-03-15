@@ -6,19 +6,6 @@ use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 
 return [
-    'page.changeSlug:before' => function (Page $page, string $slug, string|null $languageCode = null) {
-        /** @var \Kirby\Cms\App $this */
-        if (
-            $this->option('johannschopplich.algolia-docsearch.hooks', false) !== true ||
-            $this->option('debug')
-        ) {
-            return;
-        }
-
-        $docSearch = DocSearch::instance();
-        $index = $docSearch->getAlgoliaIndex();
-        $index->deleteObject($page->uri($languageCode));
-    },
     'page.delete:after' => function (bool $status, Page $page) {
         /** @var \Kirby\Cms\App $this */
         if (
@@ -28,11 +15,12 @@ return [
             return;
         }
 
+        $languageCode = $this->languageCode();
         $docSearch = DocSearch::instance();
-        $index = $docSearch->getAlgoliaIndex();
-        $index->deleteObject($page->uri($this->languageCode()));
+        $index = $docSearch->getAlgoliaIndex($languageCode);
+        $index->deleteObject($page->uri($languageCode));
     },
-    'page.*:after' => function (Event $event, Page|null $newPage) {
+    'page.*:after' => function (Event $event, Page|null $newPage, Page|null $oldPage) {
         /** @var \Kirby\Cms\App $this */
         if (
             $this->option('johannschopplich.algolia-docsearch.hooks', false) !== true ||
@@ -46,17 +34,20 @@ return [
             return;
         }
 
-        if (!$newPage) {
+        if (!$newPage || !$oldPage) {
             return;
         }
 
         $languageCode = $this->languageCode();
         $docSearch = DocSearch::instance();
-        $index = $docSearch->getAlgoliaIndex();
+        $index = $docSearch->getAlgoliaIndex($languageCode);
         $allowedTemplates = $docSearch->options['templates'] ?? [];
 
+        if ($event->action() === 'changeSlug') {
+            $index->deleteObject($oldPage->uri($languageCode));
+        }
+
         if (
-            $event->action() === 'delete' ||
             ($event->action() === 'changeStatus' && !$newPage->isListed()) ||
             ($event->action() === 'changeTemplate' && !in_array($newPage->intendedTemplate()->name(), $allowedTemplates, true))
         ) {

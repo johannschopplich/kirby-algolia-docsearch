@@ -114,7 +114,7 @@ class DocSearch
      */
     public function getAlgoliaIndex(string|null $languageCode = null): \Algolia\AlgoliaSearch\SearchIndex
     {
-        $indexName = $this->options['index'] . (!empty($languageCode) ? "-{$languageCode}" : '');
+        $indexName = $this->options['index'] . (!empty($languageCode) ? '-' . $languageCode : '');
         return $this->algolia->initIndex($indexName);
     }
 
