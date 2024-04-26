@@ -251,9 +251,6 @@ class DocSearch
             ]
         ];
 
-        // Add title
-        $data['title'] = $page->content($languageCode)->get('title')->value();
-
         // Add content
         $content = $this->options['content'] ?? 'body';
         if (is_string($content)) {
