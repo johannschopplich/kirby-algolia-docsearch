@@ -92,7 +92,7 @@ class DocSearch
         $this->options = App::instance()->option('johannschopplich.algolia-docsearch', []);
 
         if (!isset($this->options['appId'], $this->options['apiKey'])) {
-            throw new Exception('Please set your Algolia API credentials in the Kirby configuration.');
+            throw new Exception('Missing Algolia API credentials');
         }
 
         $this->algolia = Algolia::create(
@@ -180,8 +180,18 @@ class DocSearch
         // Replace all objects in the index
         $index->replaceAllObjects($objects);
 
+        // Merge custom attributes with the default index settings
+        $settings = $this->indexSettings;
+
+        if (isset($this->options['attributes'])) {
+            $settings['attributesToRetrieve'] = array_merge(
+                $settings['attributesToRetrieve'],
+                array_keys($this->options['attributes'])
+            );
+        }
+
         // Set index settings for Algolia DocSearch
-        $index->setSettings($this->indexSettings);
+        $index->setSettings($settings);
     }
 
     /**
@@ -254,10 +264,21 @@ class DocSearch
                 : $content;
 
             if (!is_callable($renderFn)) {
-                throw new Exception('The "content" option must be a string, callable or an array of callables.');
+                throw new Exception('Expected "content" to be a string, callable or an array of callables, got: ' . gettype($renderFn));
             }
 
             $data['content'] = $renderFn($page, $languageCode);
+        }
+
+        // Add custom attributes
+        $attributes = $this->options['attributes'] ?? [];
+
+        foreach ($attributes as $attribute => $fn) {
+            if (!is_callable($fn)) {
+                throw new Exception('Expected "attributes" value to be a callable, got: ' . gettype($fn));
+            }
+
+            $data[$attribute] = $fn($page, $languageCode);
         }
 
         return $data;
