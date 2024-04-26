@@ -32,9 +32,9 @@ class DocSearch
         'attributesToRetrieve' => [
             'hierarchy',
             'content',
-            'anchor',
+            // 'anchor',
             'url',
-            'url_without_anchor',
+            // 'url_without_anchor',
             'type',
         ],
         'attributesToHighlight' => ['hierarchy', 'content'],
