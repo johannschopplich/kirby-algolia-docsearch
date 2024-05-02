@@ -5,3 +5,4 @@ const composer = await fs.readJson("./composer.json");
 composer.version = version;
 await fs.writeJson("./composer.json", composer, { spaces: 2 });
 await $`composer update`;
+await $`composer dist`;
