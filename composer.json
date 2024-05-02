@@ -2,7 +2,7 @@
   "name": "johannschopplich/kirby-algolia-docsearch",
   "description": "Algolia DocSearch plugin for Kirby CMS",
   "type": "kirby-plugin",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "keywords": [
     "kirby",
     "algola",
