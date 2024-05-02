@@ -7,7 +7,7 @@
     "release": "pnpm run build && bumpp --all --execute \"npx zx scripts/pre-release.mjs\""
   },
   "devDependencies": {
-    "bumpp": "^9.4.0",
+    "bumpp": "^9.4.1",
     "zx": "^8.0.2"
   }
 }
