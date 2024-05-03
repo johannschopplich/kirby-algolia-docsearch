@@ -190,6 +190,13 @@ class DocSearch
             );
         }
 
+        if (isset($this->options['searchableAttributes'])) {
+            $settings['searchableAttributes'] = array_merge(
+                $settings['searchableAttributes'],
+                $this->options['searchableAttributes']
+            );
+        }
+
         // Set index settings for Algolia DocSearch
         $index->setSettings($settings);
     }
