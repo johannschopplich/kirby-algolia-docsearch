@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'johannschopplich/kirby-algolia-docsearch',
-        'pretty_version' => '0.6.0',
-        'version' => '0.6.0.0',
+        'pretty_version' => '0.6.1',
+        'version' => '0.6.1.0',
         'reference' => null,
         'type' => 'kirby-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'johannschopplich/kirby-algolia-docsearch' => array(
-            'pretty_version' => '0.6.0',
-            'version' => '0.6.0.0',
+            'pretty_version' => '0.6.1',
+            'version' => '0.6.1.0',
             'reference' => null,
             'type' => 'kirby-plugin',
             'install_path' => __DIR__ . '/../../',
