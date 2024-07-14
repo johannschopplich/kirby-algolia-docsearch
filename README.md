@@ -219,7 +219,7 @@ Given you have [Janitor](https://github.com/bnomei/kirby3-janitor) plugin instal
 algoliaIndex:
   label: johannschopplich.algolia-docsearch.index.start
   type: janitor
-  command: "algolia-docsearch:index"
+  command: algolia-docsearch:index
 ```
 
 #### Page Hooks
