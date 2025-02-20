@@ -277,8 +277,6 @@ docsearch({
 
 The DocSearch library provides a [customization API](https://docsearch.algolia.com/docs/styling#customization-api) to style the search modal. You can add the following CSS to your project to style the search modal.
 
-In practice, it's easiest to overwrite some CSS Custom Properties. You may take a look at [how I styled the component](https://github.com/johannschopplich/johannschopplich.com/blob/main/src/styles/components/algolia.scss).
-
 ## Special Thanks
 
 - [Wolf-Dieter Grabner](https://photos.flowlabs.studio) for sponsoring the initial version of this package. 🙏

@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'algolia/algoliasearch-client-php' => array(
-            'pretty_version' => '3.4.1',
-            'version' => '3.4.1.0',
-            'reference' => 'cf87b649f745479c0800299481d91dc303e23cea',
+            'pretty_version' => '3.4.2',
+            'version' => '3.4.2.0',
+            'reference' => '7505959737f7944507be7ef476752ad761873c4a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../algolia/algoliasearch-client-php',
             'aliases' => array(),
@@ -47,9 +47,9 @@
             'dev_requirement' => false,
         ),
         'psr/log' => array(
-            'pretty_version' => '3.0.0',
-            'version' => '3.0.0.0',
-            'reference' => 'fe5ea303b0887d5caefd3d431c3e61ad47037001',
+            'pretty_version' => '3.0.2',
+            'version' => '3.0.2.0',
+            'reference' => 'f16e1d5863e37f8d8c2a01719f5b34baa2b714d3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/log',
             'aliases' => array(),
