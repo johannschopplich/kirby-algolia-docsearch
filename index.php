@@ -6,7 +6,7 @@ use Kirby\Filesystem\F;
 @include_once __DIR__ . '/vendor/autoload.php';
 
 F::loadClasses([
-    'JohannSchopplich\\Algolia\\DocSearch' => 'AlgoliaDocSearch.php'
+    'JohannSchopplich\\Algolia\\DocSearch' => 'classes/Algolia/DocSearch.php'
 ], __DIR__);
 
 App::plugin('johannschopplich/algolia-docsearch', [

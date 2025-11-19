@@ -17,10 +17,6 @@ Well, we co-opt the DocSearch library for our own purposes. 😏 The library can
 - 🆑 [Kirby CLI](https://github.com/getkirby/cli) command support
 - 🧋 [Janitor](https://github.com/bnomei/kirby3-janitor) support
 
-## Preview
-
-![Preview of Kirby Algolia DocSearch](./.github/preview.gif)
-
 ## Requirements
 
 - Kirby 3.9+
@@ -148,7 +144,10 @@ return [
                     'en' => 'Project'
                 ]
             ]
-        ]
+        ],
+        // Optional: Extend or override Algolia index settings
+        // These settings are merged with the default DocSearch settings
+        'indexSettings' => []
     ]
 ];
 ```
