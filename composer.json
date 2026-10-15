@@ -5,10 +5,11 @@
   "version": "1.0.1",
   "keywords": [
     "kirby",
-    "algola",
+    "kirby-cms",
+    "kirby-plugin",
+    "algolia",
     "docsearch",
-    "search",
-    "index"
+    "search"
   ],
   "license": "MIT",
   "homepage": "https://github.com/johannschopplich/kirby-algolia-docsearch#readme",
