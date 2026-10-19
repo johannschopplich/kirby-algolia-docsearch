@@ -1,6 +1,6 @@
 {
   "name": "johannschopplich/kirby-algolia-docsearch",
-  "description": "Algolia DocSearch plugin for Kirby CMS",
+  "description": "Index and search your Kirby site with Algolia DocSearch",
   "type": "kirby-plugin",
   "version": "1.0.1",
   "keywords": [
@@ -21,6 +21,7 @@
     }
   ],
   "require": {
+    "php": ">=8.2",
     "getkirby/composer-installer": "^1",
     "algolia/algoliasearch-client-php": "^3.4"
   },
@@ -38,6 +39,9 @@
     }
   },
   "extra": {
-    "kirby-cms-path": false
+    "kirby-cms-path": false,
+    "kirby": {
+      "compatible": "^5.0"
+    }
   }
 }
