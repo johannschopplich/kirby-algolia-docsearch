@@ -26,10 +26,12 @@
     "algolia/algoliasearch-client-php": "^3.4"
   },
   "require-dev": {
-    "getkirby/cms": "^5"
+    "getkirby/cms": "^5",
+    "phpunit/phpunit": "^12"
   },
   "scripts": {
     "csfix": "@php tools/phpcs/vendor/bin/php-cs-fixer fix",
+    "test": "phpunit",
     "dist": "composer install --no-dev --optimize-autoloader"
   },
   "autoload": {

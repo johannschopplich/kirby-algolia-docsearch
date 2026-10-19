@@ -99,8 +99,7 @@ class DocSearch
 
     public function getAlgoliaIndex(string|null $languageCode = null): \Algolia\AlgoliaSearch\SearchIndex
     {
-        $indexName = $this->options['index'] . (!empty($languageCode) ? '-' . $languageCode : '');
-        return $this->algolia->initIndex($indexName);
+        return $this->algolia->initIndex($this->indexName($languageCode));
     }
 
     /**
@@ -275,11 +274,6 @@ class DocSearch
         return $this->options['filter']($page) === true;
     }
 
-    protected function hasIndexedTemplate(Page $page): bool
-    {
-        return in_array($page->intendedTemplate()->name(), $this->options['templates'], true);
-    }
-
     /**
      * Builds the Algolia data array from a Kirby page, with Kirby's
      * current language set to the given one.
@@ -287,6 +281,16 @@ class DocSearch
     public function format(Page $page, string|null $languageCode): array
     {
         return $this->inLanguage($languageCode, fn () => $this->buildRecord($page, $languageCode));
+    }
+
+    protected function hasIndexedTemplate(Page $page): bool
+    {
+        return in_array($page->intendedTemplate()->name(), $this->options['templates'], true);
+    }
+
+    protected function indexName(string|null $languageCode): string
+    {
+        return $this->options['index'] . ($languageCode !== null ? '-' . $languageCode : '');
     }
 
     protected function buildRecord(Page $page, string|null $languageCode): array
