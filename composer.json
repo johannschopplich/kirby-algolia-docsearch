@@ -32,6 +32,11 @@
     "csfix": "@php tools/phpcs/vendor/bin/php-cs-fixer fix",
     "dist": "composer install --no-dev --optimize-autoloader"
   },
+  "autoload": {
+    "psr-4": {
+      "JohannSchopplich\\": "src/classes/"
+    }
+  },
   "config": {
     "optimize-autoloader": true,
     "allow-plugins": {

@@ -1,18 +1,13 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Filesystem\F;
 
 @include_once __DIR__ . '/vendor/autoload.php';
 
-F::loadClasses([
-    'JohannSchopplich\\Algolia\\DocSearch' => 'classes/Algolia/DocSearch.php'
-], __DIR__);
-
 App::plugin('johannschopplich/algolia-docsearch', [
-    'commands' => require __DIR__ . '/extensions/commands.php',
-    'hooks' => require __DIR__ . '/extensions/hooks.php',
-    'translations' => require __DIR__ . '/extensions/translations.php'
+    'commands' => require __DIR__ . '/src/extensions/commands.php',
+    'hooks' => require __DIR__ . '/src/extensions/hooks.php',
+    'translations' => require __DIR__ . '/src/extensions/translations.php'
 ]);
 
 if (!function_exists('algolia')) {
