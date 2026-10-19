@@ -11,7 +11,6 @@ use Kirby\Exception\Exception;
 use Kirby\Parsley\Element;
 use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Plain as PlainSchema;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dom;
 
 class DocSearch
@@ -174,8 +173,9 @@ class DocSearch
             ...$this->options['searchableAttributes']
         ];
 
-        // Allow extending or overriding index settings via config
-        $settings = A::merge($settings, $this->options['indexSettings']);
+        // Each index setting from the config replaces the plugin's value, including
+        // what the `attributes` and `searchableAttributes` options added.
+        $settings = array_replace($settings, $this->options['indexSettings']);
 
         // Set index settings for Algolia DocSearch
         $index->setSettings($settings);
