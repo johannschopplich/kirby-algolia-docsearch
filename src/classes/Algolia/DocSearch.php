@@ -7,26 +7,23 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Parsley\Element;
-use Kirby\Toolkit\A;
 use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Plain as PlainSchema;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dom;
 
 class DocSearch
 {
     /**
-     * Singleton class instance
+     * Singleton class instance.
      */
     public static DocSearch $instance;
 
-    /**
-     * Algolia client instance
-     */
     protected Algolia $algolia;
 
     /**
      * Algolia index configuration for DocSearch
-     * Reference: https://docsearch.algolia.com/docs/templates
+     * Reference: https://docsearch.algolia.com/docs/templates.
      */
     protected array $indexSettings = [
         'attributesForFaceting' => ['type', 'lang'],
@@ -80,14 +77,8 @@ class DocSearch
         'separatorsToIndex' => '_',
     ];
 
-    /**
-     * Config settings
-     */
     public array $options = [];
 
-    /**
-     * Class constructor
-     */
     public function __construct()
     {
         $this->options = App::instance()->option('johannschopplich.algolia-docsearch', []);
@@ -102,17 +93,11 @@ class DocSearch
         );
     }
 
-    /**
-     * Returns a singleton instance of the Algolia DocSearch class
-     */
     public static function instance(): self
     {
         return static::$instance ??= new static();
     }
 
-    /**
-     * Returns the Algolia index for the given language code
-     */
     public function getAlgoliaIndex(string|null $languageCode = null): \Algolia\AlgoliaSearch\SearchIndex
     {
         $indexName = $this->options['index'] . (!empty($languageCode) ? '-' . $languageCode : '');
@@ -121,7 +106,7 @@ class DocSearch
 
     /**
      * Indexes the whole site and replaces the current Algolia index
-     * or multiple Algolia indices if Kirby languages are enabled
+     * or multiple Algolia indices if Kirby languages are enabled.
      */
     public function index(): void
     {
@@ -138,7 +123,7 @@ class DocSearch
     }
 
     /**
-     * Indexes a single page and saves it to the current Algolia index
+     * Indexes a single page and saves it to the current Algolia index.
      */
     public function indexPage(Page $page, string|null $languageCode = null): void
     {
@@ -157,13 +142,11 @@ class DocSearch
     }
 
     /**
-     * Indexes the whole site, creates or updates the Algolia index and
-     * sets the required settings for Algolia DocSearch
+     * Replaces one language's index with the site's indexable pages and
+     * applies the DocSearch index settings. Algolia swaps the new index in
+     * atomically, so searches never hit a half-built one.
      *
-     * If a language code is provided, the index will be suffixed with it
-     *
-     * Uses atomical re-indexing:
-     * https://www.algolia.com/doc/api-reference/api-methods/replace-all-objects/
+     * @see https://www.algolia.com/doc/api-reference/api-methods/replace-all-objects/
      */
     public function buildIndex(string|null $languageCode = null): void
     {
@@ -207,9 +190,6 @@ class DocSearch
         $index->setSettings($settings);
     }
 
-    /**
-     * Checks if a specific page should be included in the Algolia index
-     */
     public function isIndexable(Page $page): bool
     {
         $templates = $this->options['templates'] ?? [];
@@ -228,7 +208,7 @@ class DocSearch
     }
 
     /**
-     * Builds the Algolia data array from a Kirby page
+     * Builds the Algolia data array from a Kirby page.
      */
     public function format(Page $page, string|null $languageCode): array
     {
@@ -295,7 +275,7 @@ class DocSearch
     }
 
     /**
-     * Extracts the text content from a rendered page
+     * Extracts the text content from a rendered page.
      */
     protected function pageToText(Page $page, string $tag, string|null $languageCode): string
     {

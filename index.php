@@ -11,9 +11,6 @@ App::plugin('johannschopplich/algolia-docsearch', [
 ]);
 
 if (!function_exists('algolia')) {
-    /**
-     * Returns the Algolia DocSearch instance
-     */
     function algolia(): \JohannSchopplich\Algolia\DocSearch
     {
         return \JohannSchopplich\Algolia\DocSearch::instance();
