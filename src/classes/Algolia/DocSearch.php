@@ -12,6 +12,7 @@ use Kirby\Parsley\Element;
 use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Plain as PlainSchema;
 use Kirby\Toolkit\Dom;
+use Kirby\Toolkit\I18n;
 
 class DocSearch
 {
@@ -108,35 +109,108 @@ class DocSearch
      */
     public function index(): void
     {
-        $kirby = App::instance();
-
-        if ($kirby->multilang()) {
-            foreach ($kirby->languages()->codes() as $languageCode) {
-                $kirby->setCurrentLanguage($languageCode);
-                $this->buildIndex($languageCode);
-            }
-        } else {
-            $this->buildIndex();
-        }
+        $this->forEachLanguage($this->buildIndex(...));
     }
 
     /**
-     * Indexes a single page and saves it to the current Algolia index.
+     * Saves a single page to the Algolia index of the given language,
+     * or removes it from there if it is no longer indexable.
      */
     public function indexPage(Page $page, string|null $languageCode = null): void
     {
-        if (!$this->isIndexable($page)) {
+        $this->inLanguage($languageCode, function () use ($page, $languageCode) {
+            $index = $this->getAlgoliaIndex($languageCode);
+
+            if ($this->isIndexable($page)) {
+                $index->saveObject($this->format($page, $languageCode));
+            } elseif ($this->hasIndexedTemplate($page)) {
+                $index->deleteObject($page->uri($languageCode));
+            }
+        });
+    }
+
+    /**
+     * Updates a page's index after a content or title edit in one language.
+     * Translations show the default language's content for fields they
+     * don't translate, so an edit in the default language reaches every
+     * language's index.
+     */
+    public function updatePage(Page $page, Page $oldPage, string|null $languageCode): void
+    {
+        if (App::instance()->language($languageCode)?->isDefault()) {
+            $this->syncPage($page, $oldPage);
             return;
         }
 
-        // Convert page to Algolia data array
-        $object = $this->format($page, $languageCode);
+        $this->indexPage($page, $languageCode);
+    }
 
-        // Get Algolia index
-        $index = $this->getAlgoliaIndex($languageCode);
+    /**
+     * Updates a page in the Algolia index of every language after a
+     * change that reaches all of them (default-language content, slug,
+     * status, template or parent) and removes its records under the old
+     * URL. With `$withDescendants`, the descendants follow, for changes
+     * that affect their URLs or draft state too.
+     */
+    public function syncPage(Page $page, Page $oldPage, bool $withDescendants = false): void
+    {
+        $pages = $withDescendants ? [$page, ...$page->index()->values()] : [$page];
 
-        // Save object to index
-        $index->saveObject($object);
+        $this->forEachLanguage(function (string|null $languageCode) use ($pages, $page, $oldPage) {
+            $uri = $page->uri($languageCode);
+
+            // A moved page can't read its translated slug from the old content
+            // file anymore, so its old URL may also be the old parent's URL plus
+            // the unchanged slug; deleting a record that doesn't exist is a no-op.
+            $oldUris = array_unique([
+                $oldPage->uri($languageCode),
+                ltrim($oldPage->parent()?->uri($languageCode) . '/' . $page->slug($languageCode), '/')
+            ]);
+
+            $objects = [];
+            $oldObjectIds = [];
+
+            foreach ($pages as $item) {
+                if ($this->isIndexable($item)) {
+                    $objects[] = $this->format($item, $languageCode);
+                }
+
+                // Only pages of an indexed template can have a record, and for
+                // the page itself that is its template before the change.
+                if ($this->hasIndexedTemplate($item === $page ? $oldPage : $item)) {
+                    $path = substr($item->uri($languageCode), strlen($uri));
+
+                    foreach ($oldUris as $oldUri) {
+                        $oldObjectIds[] = $oldUri . $path;
+                    }
+                }
+            }
+
+            $index = $this->getAlgoliaIndex($languageCode);
+            $staleObjectIds = array_diff($oldObjectIds, array_column($objects, 'objectID'));
+
+            if ($staleObjectIds !== []) {
+                $index->deleteObjects(array_values($staleObjectIds));
+            }
+
+            if ($objects !== []) {
+                $index->saveObjects($objects);
+            }
+        });
+    }
+
+    /**
+     * Removes a page from the Algolia index of every language.
+     */
+    public function deletePage(Page $page): void
+    {
+        if (!$this->hasIndexedTemplate($page)) {
+            return;
+        }
+
+        $this->forEachLanguage(
+            fn (string|null $languageCode) => $this->getAlgoliaIndex($languageCode)->deleteObject($page->uri($languageCode))
+        );
     }
 
     /**
@@ -194,17 +268,28 @@ class DocSearch
             return false;
         }
 
-        if (!in_array($page->intendedTemplate()->name(), $this->options['templates'], true)) {
+        if (!$this->hasIndexedTemplate($page)) {
             return false;
         }
 
         return $this->options['filter']($page) === true;
     }
 
+    protected function hasIndexedTemplate(Page $page): bool
+    {
+        return in_array($page->intendedTemplate()->name(), $this->options['templates'], true);
+    }
+
     /**
-     * Builds the Algolia data array from a Kirby page.
+     * Builds the Algolia data array from a Kirby page, with Kirby's
+     * current language set to the given one.
      */
     public function format(Page $page, string|null $languageCode): array
+    {
+        return $this->inLanguage($languageCode, fn () => $this->buildRecord($page, $languageCode));
+    }
+
+    protected function buildRecord(Page $page, string|null $languageCode): array
     {
         $label = $this->options['label'];
         $pageTemplate = $page->intendedTemplate()->name();
@@ -229,7 +314,7 @@ class DocSearch
         // Add content
         $content = $this->options['content'];
         if (is_string($content)) {
-            $data['content'] = $this->pageToText($page, $content, $languageCode);
+            $data['content'] = $this->pageToText($page, $content);
         } else {
             $renderFn = is_array($content)
                 ? $content[$pageTemplate] ?? $content['default'] ?? null
@@ -257,10 +342,9 @@ class DocSearch
     /**
      * Extracts the text content from a rendered page.
      */
-    protected function pageToText(Page $page, string $tag, string|null $languageCode): string
+    protected function pageToText(Page $page, string $tag): string
     {
-        // TODO: Fix multilang issue
-        // Render page for the given language
+        // `render()` takes no language, so `format()` sets Kirby's current one.
         $html = $page->render();
 
         // Extract the HTML from inside the given tag
@@ -283,5 +367,50 @@ class DocSearch
             ' ',
             array_map(fn (array $block) => $block['content']['text'], $blocks)
         );
+    }
+
+    /**
+     * Calls the callback in each language with its code, or once with
+     * `null` on single-language sites.
+     */
+    protected function forEachLanguage(\Closure $callback): void
+    {
+        $kirby = App::instance();
+
+        if (!$kirby->multilang()) {
+            $callback(null);
+            return;
+        }
+
+        foreach ($kirby->languages()->codes() as $languageCode) {
+            $this->inLanguage($languageCode, fn () => $callback($languageCode));
+        }
+    }
+
+    /**
+     * Calls the callback with Kirby's current language and translation set
+     * to the given language, so rendered pages and `t()` strings match it,
+     * and restores both afterwards.
+     */
+    protected function inLanguage(string|null $languageCode, \Closure $callback): mixed
+    {
+        $kirby = App::instance();
+
+        if ($languageCode === null || !$kirby->multilang()) {
+            return $callback();
+        }
+
+        $currentLanguageCode = $kirby->languageCode();
+        $currentLocale = I18n::$locale;
+
+        try {
+            $kirby->setCurrentLanguage($languageCode);
+            $kirby->setCurrentTranslation($languageCode);
+
+            return $callback();
+        } finally {
+            $kirby->setCurrentLanguage($currentLanguageCode);
+            I18n::$locale = $currentLocale;
+        }
     }
 }
