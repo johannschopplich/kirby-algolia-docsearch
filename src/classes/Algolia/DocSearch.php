@@ -271,6 +271,11 @@ class DocSearch
         // Extract the HTML from inside the given tag
         $dom = new Dom($html);
         $node = $dom->query("//{$tag}")[0];
+
+        if ($node === null) {
+            return '';
+        }
+
         $element = new Element($node);
 
         // Initialize Parsley
