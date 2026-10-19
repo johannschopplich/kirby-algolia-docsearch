@@ -78,8 +78,12 @@ class DocSearch
     {
         $this->options = App::instance()->option('johannschopplich.algolia-docsearch');
 
-        if (!isset($this->options['appId'], $this->options['apiKey'])) {
+        if (($this->options['appId'] ?? '') === '' || ($this->options['apiKey'] ?? '') === '') {
             throw new Exception('Missing Algolia API credentials');
+        }
+
+        if (($this->options['index'] ?? '') === '') {
+            throw new Exception('Missing Algolia index name');
         }
 
         $this->algolia = Algolia::create(
@@ -203,21 +207,9 @@ class DocSearch
         $pageTemplate = $page->intendedTemplate()->name();
 
         // Determine the correct label for lvl0
-        $lvl0Label = $label['default'];
-        if (isset($label['templates'][$pageTemplate])) {
-            if (is_array($label['templates'][$pageTemplate])) {
-                if (!isset($label['templates'][$pageTemplate][$languageCode])) {
-                    throw new Exception('Missing label for language code: ' . $languageCode);
-                }
-                $lvl0Label = $label['templates'][$pageTemplate][$languageCode];
-            } else {
-                $lvl0Label = $label['templates'][$pageTemplate];
-            }
-        } elseif (is_array($label['default'])) {
-            if (!isset($label['default'][$languageCode])) {
-                throw new Exception('Missing default label for language code: ' . $languageCode);
-            }
-            $lvl0Label = $label['default'][$languageCode];
+        $lvl0Label = $label['templates'][$pageTemplate] ?? $label['default'] ?? throw new Exception('Missing default label');
+        if (is_array($lvl0Label)) {
+            $lvl0Label = $lvl0Label[$languageCode] ?? throw new Exception('Missing label for language code: ' . $languageCode);
         }
 
         // Build resulting data array
