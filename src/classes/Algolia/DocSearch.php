@@ -347,6 +347,15 @@ class DocSearch
         // `render()` takes no language, so `format()` sets Kirby's current one.
         $html = $page->render();
 
+        // Separate block-level elements, so the text of `<li>One</li><li>Two</li>`
+        // doesn't run together as "OneTwo", while inline markup such as
+        // `foo<sup>1</sup>` stays one word.
+        $html = preg_replace(
+            '#</(?:address|article|aside|blockquote|caption|dd|details|dialog|div|dl|dt|fieldset|figcaption|figure|footer|form|h[1-6]|header|hgroup|legend|li|main|menu|nav|ol|p|pre|search|section|summary|table|tbody|td|tfoot|th|thead|tr|ul)>|<(?:br|hr)\b[^>]*>#i',
+            '$0 ',
+            $html
+        );
+
         // Extract the HTML from inside the given tag
         $dom = new Dom($html);
         $node = $dom->query("//{$tag}")[0];
@@ -363,10 +372,14 @@ class DocSearch
         $blocks = $parsley->blocks();
 
         // Reduce blocks to text
-        return implode(
+        $text = implode(
             ' ',
             array_map(fn (array $block) => $block['content']['text'], $blocks)
         );
+
+        // Collapse the template's indentation and line breaks, which
+        // count toward Algolia's record size limit.
+        return trim(preg_replace('/\s+/u', ' ', $text));
     }
 
     /**
