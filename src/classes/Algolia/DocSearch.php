@@ -183,19 +183,22 @@ class DocSearch
 
     public function isIndexable(Page $page): bool
     {
-        $templates = $this->options['templates'];
-        $pageTemplate = $page->intendedTemplate()->name();
+        // Drafts and their children have no public URL.
+        if ($page->isDraft() || $page->parents()->findBy('status', 'draft') !== null) {
+            return false;
+        }
+
         $excludePages = $this->options['exclude']['pages'];
 
         if (preg_match('!^(?:' . implode('|', $excludePages) . ')$!i', $page->id())) {
             return false;
         }
 
-        if (!$page->isListed()) {
+        if (!in_array($page->intendedTemplate()->name(), $this->options['templates'], true)) {
             return false;
         }
 
-        return in_array($pageTemplate, $templates, true);
+        return $this->options['filter']($page) === true;
     }
 
     /**
