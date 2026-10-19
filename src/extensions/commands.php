@@ -8,22 +8,17 @@ return [
     'algolia-docsearch:index' => [
         'description' => 'Algolia DocSearch Index',
         'command' => static function (CLI $cli): void {
-            $docSearch = DocSearch::instance();
+            DocSearch::instance()->index();
 
-            // Index all pages
-            $docSearch->index();
+            $message = I18n::translate('johannschopplich.algolia-docsearch.index.success');
 
-            // Output for the command line
-            if (php_sapi_name() === 'cli') {
-                $cli->success(I18n::translate('johannschopplich.algolia-docsearch.index.success'));
-            }
+            // Janitor runs commands with `--quiet`, so this prints on the command line only.
+            $cli->success($message);
 
-            // Output for Janitor
             if (class_exists(\Bnomei\Janitor::class)) {
-                $janitor = \Bnomei\Janitor::singleton();
-                $janitor->data($cli->arg('command'), [
+                \Bnomei\Janitor::singleton()->data($cli->arg('command'), [
                     'status' => 200,
-                    'message' => t('johannschopplich.algolia-docsearch.index.success')
+                    'message' => $message
                 ]);
             }
         }

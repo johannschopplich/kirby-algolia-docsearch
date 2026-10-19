@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 App::plugin('johannschopplich/algolia-docsearch', [
     'commands' => require __DIR__ . '/src/extensions/commands.php',
     'hooks' => require __DIR__ . '/src/extensions/hooks.php',
+    'options' => require __DIR__ . '/src/extensions/options.php',
     'translations' => require __DIR__ . '/src/extensions/translations.php'
 ]);
 

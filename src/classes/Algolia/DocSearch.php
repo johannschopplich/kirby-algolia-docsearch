@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace JohannSchopplich\Algolia;
 
 use Algolia\AlgoliaSearch\SearchClient as Algolia;
@@ -14,25 +16,20 @@ use Kirby\Toolkit\Dom;
 
 class DocSearch
 {
-    /**
-     * Singleton class instance.
-     */
-    public static DocSearch $instance;
+    protected static self|null $instance = null;
 
     protected Algolia $algolia;
 
     /**
-     * Algolia index configuration for DocSearch
-     * Reference: https://docsearch.algolia.com/docs/templates.
+     * Algolia index configuration for DocSearch, after
+     * https://docsearch.algolia.com/docs/templates.
      */
     protected array $indexSettings = [
         'attributesForFaceting' => ['type', 'lang'],
         'attributesToRetrieve' => [
             'hierarchy',
             'content',
-            // 'anchor',
             'url',
-            // 'url_without_anchor',
             'type',
         ],
         'attributesToHighlight' => ['hierarchy', 'content'],
@@ -64,8 +61,6 @@ class DocSearch
             'exact',
             'custom',
         ],
-        'highlightPreTag' => '<span class="algolia-docsearch-suggestion--highlight">',
-        'highlightPostTag' => '</span>',
         'minWordSizefor1Typo' => 3,
         'minWordSizefor2Typos' => 7,
         'allowTyposOnNumericTokens' => false,
@@ -81,7 +76,7 @@ class DocSearch
 
     public function __construct()
     {
-        $this->options = App::instance()->option('johannschopplich.algolia-docsearch', []);
+        $this->options = App::instance()->option('johannschopplich.algolia-docsearch');
 
         if (!isset($this->options['appId'], $this->options['apiKey'])) {
             throw new Exception('Missing Algolia API credentials');
@@ -166,25 +161,17 @@ class DocSearch
 
         // Merge custom attributes with the default index settings
         $settings = $this->indexSettings;
-
-        if (isset($this->options['attributes'])) {
-            $settings['attributesToRetrieve'] = array_merge(
-                $settings['attributesToRetrieve'],
-                array_keys($this->options['attributes'])
-            );
-        }
-
-        if (isset($this->options['searchableAttributes'])) {
-            $settings['searchableAttributes'] = array_merge(
-                $settings['searchableAttributes'],
-                $this->options['searchableAttributes']
-            );
-        }
+        $settings['attributesToRetrieve'] = [
+            ...$settings['attributesToRetrieve'],
+            ...array_keys($this->options['attributes'])
+        ];
+        $settings['searchableAttributes'] = [
+            ...$settings['searchableAttributes'],
+            ...$this->options['searchableAttributes']
+        ];
 
         // Allow extending or overriding index settings via config
-        if (isset($this->options['indexSettings'])) {
-            $settings = A::merge($settings, $this->options['indexSettings']);
-        }
+        $settings = A::merge($settings, $this->options['indexSettings']);
 
         // Set index settings for Algolia DocSearch
         $index->setSettings($settings);
@@ -192,9 +179,9 @@ class DocSearch
 
     public function isIndexable(Page $page): bool
     {
-        $templates = $this->options['templates'] ?? [];
+        $templates = $this->options['templates'];
         $pageTemplate = $page->intendedTemplate()->name();
-        $excludePages = $this->options['exclude']['pages'] ?? [];
+        $excludePages = $this->options['exclude']['pages'];
 
         if (preg_match('!^(?:' . implode('|', $excludePages) . ')$!i', $page->id())) {
             return false;
@@ -212,7 +199,7 @@ class DocSearch
      */
     public function format(Page $page, string|null $languageCode): array
     {
-        $label = $this->options['label'] ?? [];
+        $label = $this->options['label'];
         $pageTemplate = $page->intendedTemplate()->name();
 
         // Determine the correct label for lvl0
@@ -245,7 +232,7 @@ class DocSearch
         ];
 
         // Add content
-        $content = $this->options['content'] ?? 'body';
+        $content = $this->options['content'];
         if (is_string($content)) {
             $data['content'] = $this->pageToText($page, $content, $languageCode);
         } else {
@@ -261,9 +248,7 @@ class DocSearch
         }
 
         // Add custom attributes
-        $attributes = $this->options['attributes'] ?? [];
-
-        foreach ($attributes as $attribute => $fn) {
+        foreach ($this->options['attributes'] as $attribute => $fn) {
             if (!is_callable($fn)) {
                 throw new Exception('Expected "attributes" value to be a callable, got: ' . gettype($fn));
             }
