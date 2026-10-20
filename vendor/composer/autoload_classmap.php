@@ -73,6 +73,7 @@ return array(
     'Algolia\\AlgoliaSearch\\Support\\Helpers' => $vendorDir . '/algolia/algoliasearch-client-php/src/Support/Helpers.php',
     'Algolia\\AlgoliaSearch\\Support\\UserAgent' => $vendorDir . '/algolia/algoliasearch-client-php/src/Support/UserAgent.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'JohannSchopplich\\Algolia\\DocSearch' => $baseDir . '/src/classes/Algolia/DocSearch.php',
     'Kirby\\ComposerInstaller\\CmsInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
     'Kirby\\ComposerInstaller\\Installer' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
     'Kirby\\ComposerInstaller\\Plugin' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',

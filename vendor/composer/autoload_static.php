@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf1abb42bae99e64403e165315e6d7647
+class ComposerStaticInit87f2b90e4a845755d2b37188e60d765b
 {
     public static $files = array (
         '979dffec6fa5205cabd2c2cd1e9e6b3a' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php',
@@ -12,40 +12,48 @@ class ComposerStaticInitf1abb42bae99e64403e165315e6d7647
     );
 
     public static $prefixLengthsPsr4 = array (
-        'P' => 
+        'P' =>
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
         ),
-        'K' => 
+        'K' =>
         array (
             'Kirby\\' => 6,
         ),
-        'A' => 
+        'J' =>
+        array (
+            'JohannSchopplich\\' => 17,
+        ),
+        'A' =>
         array (
             'Algolia\\AlgoliaSearch\\' => 22,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Kirby\\' => 
+        'Kirby\\' =>
         array (
             0 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
-        'Algolia\\AlgoliaSearch\\' => 
+        'JohannSchopplich\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/classes',
+        ),
+        'Algolia\\AlgoliaSearch\\' =>
         array (
             0 => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src',
         ),
@@ -119,6 +127,7 @@ class ComposerStaticInitf1abb42bae99e64403e165315e6d7647
         'Algolia\\AlgoliaSearch\\Support\\Helpers' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Support/Helpers.php',
         'Algolia\\AlgoliaSearch\\Support\\UserAgent' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Support/UserAgent.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'JohannSchopplich\\Algolia\\DocSearch' => __DIR__ . '/../..' . '/src/classes/Algolia/DocSearch.php',
         'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
         'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
         'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
@@ -146,9 +155,9 @@ class ComposerStaticInitf1abb42bae99e64403e165315e6d7647
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf1abb42bae99e64403e165315e6d7647::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf1abb42bae99e64403e165315e6d7647::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitf1abb42bae99e64403e165315e6d7647::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit87f2b90e4a845755d2b37188e60d765b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit87f2b90e4a845755d2b37188e60d765b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit87f2b90e4a845755d2b37188e60d765b::$classMap;
 
         }, null, ClassLoader::class);
     }

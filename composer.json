@@ -2,7 +2,7 @@
   "name": "johannschopplich/kirby-algolia-docsearch",
   "description": "Index and search your Kirby site with Algolia DocSearch",
   "type": "kirby-plugin",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "keywords": [
     "kirby",
     "kirby-cms",

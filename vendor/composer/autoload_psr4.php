@@ -10,5 +10,6 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Kirby\\' => array($vendorDir . '/getkirby/composer-installer/src'),
+    'JohannSchopplich\\' => array($baseDir . '/src/classes'),
     'Algolia\\AlgoliaSearch\\' => array($vendorDir . '/algolia/algoliasearch-client-php/src'),
 );
