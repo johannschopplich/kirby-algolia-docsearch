@@ -79,7 +79,7 @@ The closure receives the language code of the index it writes to. For different 
 
 ## Requirements
 
-- Kirby 5
+- Kirby 5 or 6
 
 ## Installation
 

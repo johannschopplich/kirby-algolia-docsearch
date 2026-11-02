@@ -26,7 +26,7 @@
     "algolia/algoliasearch-client-php": "^3.4"
   },
   "require-dev": {
-    "getkirby/cms": "^5",
+    "getkirby/cms": "^5 || ^6",
     "phpunit/phpunit": "^12"
   },
   "scripts": {
@@ -48,7 +48,7 @@
   "extra": {
     "kirby-cms-path": false,
     "kirby": {
-      "compatible": "^5.0"
+      "compatible": "^5.0 || ^6.0"
     }
   }
 }
