@@ -325,6 +325,29 @@ final class DocSearchTest extends TestCase
     }
 
     #[Test]
+    public function creating_a_listed_page_indexes_it_in_every_language(): void
+    {
+        $app = $this->multilangApp();
+        $docSearch = FakeDocSearch::install();
+
+        Page::create(['slug' => 'docs', 'template' => 'default', 'draft' => false, 'num' => 1, 'content' => ['title' => 'Docs']]);
+
+        $this->assertSame(['docs'], $docSearch->objectIds('example-en'));
+        $this->assertSame(['docs'], $docSearch->objectIds('example-de'));
+    }
+
+    #[Test]
+    public function creating_a_draft_sends_nothing(): void
+    {
+        $app = $this->multilangApp();
+        $docSearch = FakeDocSearch::install();
+
+        Page::create(['slug' => 'docs', 'template' => 'default', 'content' => ['title' => 'Docs']]);
+
+        $this->assertSame([], $docSearch->indices);
+    }
+
+    #[Test]
     public function changing_the_slug_moves_the_records_of_the_page_and_its_descendants(): void
     {
         $app = $this->multilangApp();

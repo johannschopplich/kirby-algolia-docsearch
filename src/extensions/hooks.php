@@ -27,7 +27,7 @@ return [
 
         $action = $event->action();
 
-        if (!in_array($action, ['delete', 'update', 'changeTitle', 'changeSlug', 'changeStatus', 'changeTemplate', 'move'], true)) {
+        if (!in_array($action, ['create', 'delete', 'update', 'changeTitle', 'changeSlug', 'changeStatus', 'changeTemplate', 'move'], true)) {
             return;
         }
 
@@ -39,6 +39,7 @@ return [
             $docSearch = DocSearch::instance();
 
             match ($action) {
+                'create' => $docSearch->isIndexable($page) ? $docSearch->syncPage($page, $page) : null,
                 'delete' => $docSearch->deletePage($page),
                 // Content and title edits are saved per language.
                 'update', 'changeTitle' => $docSearch->updatePage($newPage, $oldPage, $editedLanguageCodes[$newPage->id()] ?? $this->languageCode()),

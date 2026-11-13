@@ -52,7 +52,7 @@ fields:
 With the `hooks` option enabled, a change to a page updates its record. Index the site once, and the hooks take over from there:
 
 - Saving content or changing the title in a translation updates that language's index; in the default language, every language's index.
-- Changing the slug or status, moving, changing the template, and deleting update every language's index. When a page's URL or draft state changes, its descendants follow.
+- Creating a published page, changing the slug or status, moving, changing the template, and deleting update every language's index. When a page's URL or draft state changes, its descendants follow.
 
 A page that shows content from elsewhere – a menu, a list of child pages, a site field, a file – keeps its old record until the next full index.
 
