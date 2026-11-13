@@ -138,6 +138,17 @@ final class DocSearchTest extends TestCase
     }
 
     #[Test]
+    public function excludes_every_page_but_docs_by_a_negative_lookahead(): void
+    {
+        $this->app(['exclude' => ['pages' => ['(?!docs$).*']]]);
+        $docSearch = FakeDocSearch::install();
+
+        $docSearch->index();
+
+        $this->assertSame(['docs'], $docSearch->objectIds('example'));
+    }
+
+    #[Test]
     public function formats_a_page_as_a_docsearch_record(): void
     {
         $app = $this->app([

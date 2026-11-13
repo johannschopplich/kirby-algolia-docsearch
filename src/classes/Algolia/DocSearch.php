@@ -263,7 +263,7 @@ class DocSearch
 
         $excludePages = $this->options['exclude']['pages'];
 
-        if (preg_match('!^(?:' . implode('|', $excludePages) . ')$!i', $page->id())) {
+        if (preg_match('#^(?:' . implode('|', $excludePages) . ')$#i', $page->id())) {
             return false;
         }
 
