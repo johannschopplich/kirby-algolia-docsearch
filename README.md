@@ -18,7 +18,7 @@ Kirby Algolia DocSearch is a plugin for [Kirby CMS](https://getkirby.com) that i
 | ------------------------------------------ | -------------------------------------------- |
 | Index the whole site                       | `kirby algolia-docsearch:index`              |
 | Index the site from the Panel              | Janitor field with `algolia-docsearch:index` |
-| Keep the index current on every edit       | `hooks` option                               |
+| Update the index when a page changes       | `hooks` option                               |
 | Index unlisted pages, too                  | `filter` option                              |
 | Index a field instead of the rendered HTML | `content` closure                            |
 | Add data to each search hit                | `attributes` option                          |
@@ -35,6 +35,8 @@ The plugin renders every listed page of the configured templates, extracts the t
 kirby algolia-docsearch:index
 ```
 
+On the command line, set Kirby's [`url` option](https://getkirby.com/docs/reference/system/options/url) first, or the records get root-relative URLs such as `/docs/installation`.
+
 With [Janitor](https://github.com/bnomei/kirby-janitor) installed, the same command runs from a button in the Panel:
 
 ```yml
@@ -47,10 +49,14 @@ fields:
 
 ### 🔁 Page Hooks
 
-With the `hooks` option enabled, the index follows changes in the Panel. Index the site once, and the hooks keep it current from there:
+With the `hooks` option enabled, a change to a page updates its record. Index the site once, and the hooks take over from there:
 
 - Saving content or changing the title in a translation updates that language's index. In the default language, it updates every language's index, since translations show its content for fields they don't translate.
 - Changing the slug or status, moving, changing the template, and deleting update every language's index. When a page's URL or draft state changes, its descendants follow.
+
+A page that shows content from elsewhere – a menu, a list of child pages, a site field, a file – keeps its old record until the next full index.
+
+A hook that fails shows an Algolia error in the Panel. The page change is saved by then, and the next full index corrects its record.
 
 The hooks stay off while Kirby's `debug` option is on.
 
@@ -76,6 +82,23 @@ By default, a record's content is the text inside the rendered page's `<body>`. 
 ```
 
 The closure receives the language code of the index it writes to. For different content per template, pass an array of closures keyed by template name, with `default` for the rest.
+
+### 🛠️ Indexing From Your Own Code
+
+In a route, a hook, or a script of your own, the `algolia()` helper returns the plugin's indexer:
+
+```php
+// Replaces the index of every language, as the command does.
+algolia()->index();
+
+// Saves a page to one language's index.
+algolia()->indexPage($page, 'en');
+
+// Removes a page from every language's index.
+algolia()->deletePage($page);
+```
+
+`indexPage()` removes the record of a page that no longer belongs in the index, such as a draft or one the `filter` rejects. On a single-language site, call `indexPage($page)` without a language code.
 
 ## Requirements
 
@@ -125,21 +148,21 @@ See the [DocSearch documentation](https://docsearch.algolia.com) for the CDN bui
 
 All options are namespaced under `johannschopplich.algolia-docsearch`:
 
-| Option                 | Default      | Description                                                                                                                                                                   |
-| ---------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `appId`                | –            | Algolia application ID. Required.                                                                                                                                             |
-| `apiKey`               | –            | Algolia API key with write access, such as the Admin API key. It stays on the server. Required.                                                                               |
-| `index`                | –            | Index name. Multi-language sites get one index per language, suffixed with the language code. Required.                                                                       |
-| `templates`            | `[]`         | Templates to index. Pages of other templates are left out, so nothing is indexed until you set this.                                                                          |
-| `filter`               | listed pages | Closure `fn (Page $page): bool` that decides which pages of those templates get indexed. Drafts never are.                                                                    |
-| `exclude.pages`        | `[]`         | Page IDs to leave out, as case-insensitive regular expressions matched against the whole ID, e.g. `blog/.*`.                                                                  |
-| `content`              | `body`       | HTML tag whose text becomes the record's content, a closure `fn (Page $page, string\|null $languageCode): string`, or an array of closures per template with a `default` key. |
-| `label.default`        | –            | Hit label (DocSearch's `lvl0`) as a string or an array per language code. Required unless `label.templates` covers every template.                                            |
-| `label.templates`      | `[]`         | Labels per template, in the same shapes as `label.default`.                                                                                                                   |
-| `attributes`           | `[]`         | Extra record fields as closures `fn (Page $page, string\|null $languageCode)`, keyed by field name.                                                                           |
-| `searchableAttributes` | `[]`         | Attributes appended to DocSearch's searchable attributes.                                                                                                                     |
-| `indexSettings`        | `[]`         | Algolia index settings. Each key replaces the plugin's value for that setting, including what `searchableAttributes` and `attributes` add to it.                              |
-| `hooks`                | `false`      | Update the index on page changes in the Panel. See [Page Hooks](#-page-hooks).                                                                                                |
+| Option                 | Default      | Description                                                                                                                                                                                                                                                   |
+| ---------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `appId`                | –            | Algolia application ID. Required.                                                                                                                                                                                                                             |
+| `apiKey`               | –            | Algolia API key with write access, such as the Admin API key. It stays on the server. Required.                                                                                                                                                               |
+| `index`                | –            | Index name. Multi-language sites get one index per language, suffixed with the language code. Required.                                                                                                                                                       |
+| `templates`            | `[]`         | Templates to index. Pages of other templates are left out, so nothing is indexed until you set this.                                                                                                                                                          |
+| `filter`               | listed pages | Closure `fn (Page $page): bool` that decides which pages of those templates get indexed. Drafts never are.                                                                                                                                                    |
+| `exclude.pages`        | `[]`         | Page IDs to leave out, as case-insensitive regular expressions matched against the whole ID, e.g. `blog/.*`.                                                                                                                                                  |
+| `content`              | `body`       | HTML tag whose text becomes the record's content, a closure `fn (Page $page, string\|null $languageCode): string`, or an array of closures per template with a `default` key.                                                                                 |
+| `label.default`        | –            | Hit label (DocSearch's `hierarchy.lvl0`) as a string or an array per language code. Required unless `label.templates` covers every template.                                                                                                                  |
+| `label.templates`      | `[]`         | Labels per template, in the same shapes as `label.default`.                                                                                                                                                                                                   |
+| `attributes`           | `[]`         | Extra record fields as closures `fn (Page $page, string\|null $languageCode)`, keyed by field name.                                                                                                                                                           |
+| `searchableAttributes` | `[]`         | Attributes appended to DocSearch's searchable attributes.                                                                                                                                                                                                     |
+| `indexSettings`        | `[]`         | Algolia index settings. Each key replaces the plugin's [default](https://github.com/johannschopplich/kirby-algolia-docsearch/blob/main/src/classes/Algolia/DocSearch.php) for that setting, including what `searchableAttributes` and `attributes` add to it. |
+| `hooks`                | `false`      | Update the index when a page changes. See [Page Hooks](#-page-hooks).                                                                                                                                                                                         |
 
 Example `config.php`:
 
@@ -174,6 +197,7 @@ return [
 
 - **One record per page.** Algolia's free plan rejects records larger than 10 KB. For long pages, shorten the text a `content` closure returns, e.g. with `Str::short($text, 5000)`.
 - **Custom attributes need a request.** DocSearch asks for its own list of attributes with every search. To receive the fields from `attributes` in your hits, list them in `searchParameters.attributesToRetrieve` of the index entry in `indices`, together with DocSearch's own: `hierarchy.lvl0` to `hierarchy.lvl6`, `content`, `type`, and `url`.
+- **Only a full index writes the index settings.** A change to `attributes`, `searchableAttributes`, or `indexSettings` applies with the next full index. It resets every setting the plugin has a default for, including one you changed in the Algolia dashboard, so set it in `indexSettings` instead.
 
 ## Credits
 
