@@ -1,6 +1,6 @@
 {
   "name": "johannschopplich/kirby-algolia-docsearch",
-  "description": "Index and search your Kirby site with Algolia DocSearch",
+  "description": "Index your Kirby site for the Algolia DocSearch modal",
   "type": "kirby-plugin",
   "version": "1.2.0",
   "keywords": [
