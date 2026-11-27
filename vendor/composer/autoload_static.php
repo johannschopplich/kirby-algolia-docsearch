@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6b8a222a973ad87d36268568ad5503ac
+class ComposerStaticInit11831086f4a3eab63876bbdf944bd887
 {
     public static $files = array (
         '979dffec6fa5205cabd2c2cd1e9e6b3a' => __DIR__ . '/..' . '/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php',
@@ -155,9 +155,9 @@ class ComposerStaticInit6b8a222a973ad87d36268568ad5503ac
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6b8a222a973ad87d36268568ad5503ac::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6b8a222a973ad87d36268568ad5503ac::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6b8a222a973ad87d36268568ad5503ac::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit11831086f4a3eab63876bbdf944bd887::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit11831086f4a3eab63876bbdf944bd887::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit11831086f4a3eab63876bbdf944bd887::$classMap;
 
         }, null, ClassLoader::class);
     }
